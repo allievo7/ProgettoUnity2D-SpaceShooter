@@ -8,7 +8,9 @@ public class Bombardiere : Nemico
     public float posizionamentoCD = 2f;
     public VaiQui vaiQui;
     private float distance;
+    public AudioSource audios;
     public GameObject[] buffini;
+    public bool againstShield = false;
 
     public float frequenzaDiSparo = 2;
     private float tempoDiSparo;
@@ -16,6 +18,11 @@ public class Bombardiere : Nemico
     // Start is called before the first frame update
     public override void AutoDistruzione()
     {
+        if (!this.againstShield)
+        {
+            Instantiate(buffini[Random.Range(0, 3)], transform.position, Quaternion.identity);
+            gameManager.AggiungiPunti(10);
+        }
         gameObject.SetActive(false);
         Destroy(gameObject);
     }
@@ -41,30 +48,29 @@ public class Bombardiere : Nemico
         if (collision.collider.name.Equals("Proiettile(Clone)"))
         {
             enemyLife--;
-            if (enemyLife <= 0)
-            {
-                Instantiate(buffini[Random.Range(0, 3)], transform.position, Quaternion.identity);
-                gameManager.AggiungiPunti(10);
-            }
+            gameManager.PlayExplosion();
         }
 
         if (collision.collider.name.Equals("Starship"))
         {
             enemyLife--;
-            if (enemyLife <= 0)
-            {
-                gameManager.AggiungiPunti(10);
-            }
         }
 
         if (collision.collider.name.Equals("Scudo"))
         {
             gameManager.DiminuisciEnergia(1);
             enemyLife--;
-            if (enemyLife <= 0)
+            this.againstShield = true;
+        }
+
+        if (enemyLife <= 0)
+        {
+            if (gameManager.ilGiocatoreEVivo())
             {
-                AutoDistruzione();
+                Physics2D.IgnoreCollision(GameObject.FindGameObjectWithTag("Player").GetComponent<Collider2D>(), this.GetComponent<Collider2D>());
             }
+            animator.SetTrigger("Dead");
+            Invoke("AutoDistruzione", 0.5f);
         }
     }
 
@@ -75,6 +81,7 @@ public class Bombardiere : Nemico
         if (tempoDiSparo >= frequenzaDiSparo)
         {
             Instantiate(proiettile, transform.position, Quaternion.identity);
+            audios.PlayOneShot(audios.clip);
             tempoDiSparo = 0;
         }
     }

@@ -20,6 +20,7 @@ public class StarshipScript : MonoBehaviour
     private bool isBuffed;
     public GameObject navePiùA;
     public GameObject navePiùB;
+    public AudioSource audio;
 
     // Start is called before the first frame update
     void Start()
@@ -31,6 +32,7 @@ public class StarshipScript : MonoBehaviour
         frequenzaDiSparo = 0.5f;
         gameManager = FindObjectOfType<GameManager>();
         isBuffed = false;
+        audio = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -93,6 +95,7 @@ public class StarshipScript : MonoBehaviour
             navePiùB.SetActive(false);
             if (Input.GetKey(KeyCode.Space) && tempoDiSparo > frequenzaDiSparo)
             {
+                audio.PlayOneShot(audio.clip);
                 tempoDiSparo = 0;
                 Instantiate(proiettile, transform.position, Quaternion.identity);
             }

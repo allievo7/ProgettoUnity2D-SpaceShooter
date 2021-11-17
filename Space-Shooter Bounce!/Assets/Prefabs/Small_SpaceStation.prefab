@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 2658242700267335627}
   - component: {fileID: 3557072357213629314}
   - component: {fileID: 5692974817326872499}
+  - component: {fileID: -3227210354153402044}
   m_Layer: 6
   m_Name: Small_SpaceStation
   m_TagString: Nemico
@@ -105,7 +106,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 5
 --- !u!61 &3557072357213629314
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -149,3 +150,23 @@ MonoBehaviour:
   direzione: {x: 0, y: 0}
   gameManager: {fileID: 0}
   enemyLife: 1
+  animator: {fileID: 0}
+--- !u!95 &-3227210354153402044
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2299328469802991503}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 3db3edac6bce4b0489f97289c407798f, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0

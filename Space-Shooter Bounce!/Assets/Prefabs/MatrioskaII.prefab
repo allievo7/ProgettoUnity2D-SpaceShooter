@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 5457410920029108643}
   - component: {fileID: -1084599976411515917}
   - component: {fileID: 623098493909762673}
+  - component: {fileID: 7591157680077257399}
   m_Layer: 6
   m_Name: MatrioskaII
   m_TagString: Nemico
@@ -102,6 +103,7 @@ MonoBehaviour:
   direzione: {x: 0, y: 0}
   gameManager: {fileID: 0}
   enemyLife: 2
+  animator: {fileID: 0}
   matrioska2: {fileID: 2299328469802991503, guid: d4abbd7ed61e99a4ba4ddaab8a1b6ebc, type: 3}
   matrioskaDanno: 3
 --- !u!58 &-1084599976411515917
@@ -141,3 +143,22 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 5
+--- !u!95 &7591157680077257399
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3982616070404798699}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 3db3edac6bce4b0489f97289c407798f, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0

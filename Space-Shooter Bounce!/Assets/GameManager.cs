@@ -18,11 +18,16 @@ public class GameManager : MonoBehaviour
     public GameObject gameOverCanvas;
     public GameObject scudo;
     public SpawnerSpeciale spwanSpec;
+    public AudioSource audioS;
     public float rebirthCD;
     public int playerEnergy;
     public int playerLife;
     public int nemiciUccisi;
     public float asteroideCD;
+    public int numNemici;
+    private AudioClip laserHitClip;
+    private AudioClip enemydeath;
+    private AudioClip shieldhit;
 
     private void Awake()
     {
@@ -45,7 +50,11 @@ public class GameManager : MonoBehaviour
         rebirthCD = 3;
         maxAsteroidi = 1;
         asteroideCD = 45;
+        audioS = GetComponent<AudioSource>();
 
+        laserHitClip = Resources.Load("laserhit_player_sshooter") as AudioClip;
+        enemydeath = Resources.Load("normenemy_death_sshooter") as AudioClip;
+        shieldhit = Resources.Load("shieldhit_sshooter") as AudioClip;
     }
     // Start is called before the first frame update
     void Start()
@@ -56,6 +65,8 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        numNemici = FindObjectsOfType<NemicoNormale>().Length;
+
         asteroideCD -= Time.deltaTime;
 
         if (!starship.activeSelf && !gameOverCanvas.activeSelf)
@@ -90,7 +101,6 @@ public class GameManager : MonoBehaviour
 
     public void DiminuisciNemici()
     {
-        nemici--;
         nemiciUccisi++;
         if (nemiciUccisi == 10)
         {
@@ -160,7 +170,7 @@ public class GameManager : MonoBehaviour
 
     public bool PossoMandareUnNuovoNemico()
     {
-        if (nemici < maxNemici)
+        if (numNemici < 3)
         {
             return true;
         }
@@ -186,5 +196,23 @@ public class GameManager : MonoBehaviour
     {
         gameOverCanvas.SetActive(true);
         starship.SetActive(false);
+    }
+
+    public void PlayExplosion()
+    {
+        audioS.clip = laserHitClip;
+        audioS.Play();
+    }
+
+    public void PlayDeathSound()
+    {
+        audioS.clip = enemydeath;
+        audioS.Play();
+    }
+
+    public void PlayShieldHit()
+    {
+        audioS.clip = shieldhit;
+        audioS.Play();
     }
 }

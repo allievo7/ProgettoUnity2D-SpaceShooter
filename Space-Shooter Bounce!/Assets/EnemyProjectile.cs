@@ -48,6 +48,7 @@ public class EnemyProjectile : MonoBehaviour
 
         if (collision.collider.name.Equals("Scudo"))
         {
+            gameManager.PlayShieldHit();
             gameManager.DiminuisciEnergia(1);
             AutoDistruzione();
         }

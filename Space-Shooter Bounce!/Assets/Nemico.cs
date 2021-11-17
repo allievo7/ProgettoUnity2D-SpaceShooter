@@ -10,6 +10,7 @@ public class Nemico : MonoBehaviour
     protected Rigidbody2D rigid;
     [SerializeField]public GameManager gameManager;
     [SerializeField] public float enemyLife;
+    [SerializeField] public Animator animator;
     // Start is called before the first frame update
     void Start()
     {
@@ -22,8 +23,7 @@ public class Nemico : MonoBehaviour
         direzione.x = 0;
 
         gameManager = FindObjectOfType<GameManager>();
-
-        
+        animator = GetComponent<Animator>();
     }
 
     // Update is called once per frame
@@ -53,10 +53,6 @@ public class Nemico : MonoBehaviour
 
         Attack();
 
-        if (enemyLife <= 0)
-        {
-            AutoDistruzione();
-        }
     }
 
     private void FixedUpdate()
@@ -66,7 +62,6 @@ public class Nemico : MonoBehaviour
 
     public virtual void AutoDistruzione()
     {
-        gameManager.DiminuisciNemici();
         gameObject.SetActive(false);
         Destroy(gameObject);
     }
@@ -75,21 +70,30 @@ public class Nemico : MonoBehaviour
     {
         if (collision.collider.name.Equals("Proiettile(Clone)"))
         {
-            enemyLife--;
             gameManager.AggiungiPunti(2);
+            gameManager.PlayDeathSound();
         }
 
         if (collision.collider.name.Equals("Starship"))
         {
-            enemyLife--;
             gameManager.AggiungiPunti(2);
+            gameManager.PlayDeathSound();
         }
 
         if (collision.collider.name.Equals("Scudo"))
         {
             gameManager.DiminuisciEnergia(1);
-            AutoDistruzione();
+            gameManager.PlayShieldHit();
         }
+
+        if (gameManager.ilGiocatoreEVivo() && !gameManager.gameOverCanvas.activeSelf)
+        {
+            Physics2D.IgnoreCollision(GameObject.FindGameObjectWithTag("Player").GetComponent<Collider2D>(), this.GetComponent<Collider2D>());
+        }
+        
+        gameManager.DiminuisciNemici();
+        animator.SetTrigger("Dead");
+        Invoke("AutoDistruzione", 0.5f);
     }
 
     public virtual void Move()
