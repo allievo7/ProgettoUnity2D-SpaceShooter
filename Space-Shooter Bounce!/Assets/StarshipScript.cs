@@ -20,8 +20,11 @@ public class StarshipScript : MonoBehaviour
     private bool isBuffed;
     public GameObject navePiùA;
     public GameObject navePiùB;
-    public AudioSource audio;
-
+    public AudioSource audios;
+    public AudioClip shot;
+    public AudioClip powerUpShot1;
+    public AudioClip hurt;
+    public AudioClip powerUP;
     // Start is called before the first frame update
     void Start()
     {
@@ -32,7 +35,7 @@ public class StarshipScript : MonoBehaviour
         frequenzaDiSparo = 0.5f;
         gameManager = FindObjectOfType<GameManager>();
         isBuffed = false;
-        audio = GetComponent<AudioSource>();
+        audios = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -95,7 +98,7 @@ public class StarshipScript : MonoBehaviour
             navePiùB.SetActive(false);
             if (Input.GetKey(KeyCode.Space) && tempoDiSparo > frequenzaDiSparo)
             {
-                audio.PlayOneShot(audio.clip);
+                audios.PlayOneShot(shot);
                 tempoDiSparo = 0;
                 Instantiate(proiettile, transform.position, Quaternion.identity);
             }
@@ -106,6 +109,7 @@ public class StarshipScript : MonoBehaviour
             navePiùB.SetActive(true);
             if (Input.GetKey(KeyCode.Space) && tempoDiSparo > frequenzaDiSparo)
             {
+                audios.PlayOneShot(powerUpShot1);
                 tempoDiSparo = 0;
                 Instantiate(proiettile, transform.position, Quaternion.identity);
                 Instantiate(proiettile, navePiùA.transform.position, Quaternion.identity);
@@ -131,6 +135,7 @@ public class StarshipScript : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
+
         if (collision.collider.name.Equals("Proiettile(Clone)"))
         {
 
@@ -138,6 +143,10 @@ public class StarshipScript : MonoBehaviour
         else if (collision.collider.name.Equals("A(Clone)") || collision.collider.name.Equals("B(Clone)"))
         {
             gameManager.DiminuisciLife(3);
+            if (gameManager.ilGiocatoreEVivo())
+            {
+                audios.PlayOneShot(hurt);
+            }
             if (!gameManager.ilGiocatoreEVivo())
             {
                 AutoDistruzione();
@@ -149,10 +158,14 @@ public class StarshipScript : MonoBehaviour
         }
         else if (collision.collider.name.Equals("EnemyProjectile(Clone)"))
         {
-
+            if (gameManager.ilGiocatoreEVivo())
+            {
+                audios.PlayOneShot(hurt);
+            }
         }
         else if (collision.collider.name.Equals("NavePiù(Clone)"))
         {
+            audios.PlayOneShot(powerUP);
             if (!isBuffed)
             {
                 isBuffed = true;
@@ -163,13 +176,19 @@ public class StarshipScript : MonoBehaviour
             }
         }
         else if (collision.collider.name.Equals("LifePiù(Clone)"))
-        { 
+        {
+            audios.PlayOneShot(powerUP);
         }
         else if (collision.collider.name.Equals("EnergiaPiù(Clone)"))
         {
+            audios.PlayOneShot(powerUP);
         }
         else
         {
+            if (gameManager.ilGiocatoreEVivo())
+            {
+                audios.PlayOneShot(hurt);
+            }
             gameManager.DiminuisciLife(1);
             if (!gameManager.ilGiocatoreEVivo())
             {
@@ -180,6 +199,7 @@ public class StarshipScript : MonoBehaviour
 
     void AutoDistruzione()
     {
+        gameManager.PlayerExplosion();
         isBuffed = false;
         gameObject.SetActive(false);
     }

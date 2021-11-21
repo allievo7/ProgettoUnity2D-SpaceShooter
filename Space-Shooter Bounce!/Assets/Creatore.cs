@@ -43,7 +43,7 @@ public class Creatore : MonoBehaviour
             gameManager.AumentaNemici();
         }
 
-        if (nemicoForteCD <= 0)
+        if (nemicoForteCD <= 0 && !gameManager.isBossTime)
         {
             Instantiate(nemico[Random.Range(1,3)], posizioneDiLancio, Quaternion.identity);
             nemicoForteCD = 20;

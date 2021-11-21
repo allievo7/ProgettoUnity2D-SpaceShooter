@@ -40,7 +40,7 @@ public class Buff : MonoBehaviour
     {
         if (isEnergia)
         {
-            gameManager.AumentaEnergia(20);
+            gameManager.AumentaEnergia(10);
         }
         if (isLife)
         {

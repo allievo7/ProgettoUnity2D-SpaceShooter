@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -16,6 +17,7 @@ public class GameManager : MonoBehaviour
     public Text testoLife;
     public GameObject starship;
     public GameObject gameOverCanvas;
+    public GameObject gameExitCanvas;
     public GameObject scudo;
     public SpawnerSpeciale spwanSpec;
     public AudioSource audioS;
@@ -28,18 +30,22 @@ public class GameManager : MonoBehaviour
     private AudioClip laserHitClip;
     private AudioClip enemydeath;
     private AudioClip shieldhit;
+    public bool isBossTime = false;
+    public float untilBoss;
+    public AudioClip playerExplo;
+
 
     private void Awake()
     {
-        if (instance == null)
-        {
-            instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
+        //if (instance == null)
+        //{
+        //    instance = this;
+        //    DontDestroyOnLoad(gameObject);
+        //}
+        //else
+        //{
+        //    Destroy(gameObject);
+        //}
 
         punti = 0;
         nemici = 0;
@@ -51,6 +57,7 @@ public class GameManager : MonoBehaviour
         maxAsteroidi = 1;
         asteroideCD = 45;
         audioS = GetComponent<AudioSource>();
+        untilBoss = 180f;
 
         laserHitClip = Resources.Load("laserhit_player_sshooter") as AudioClip;
         enemydeath = Resources.Load("normenemy_death_sshooter") as AudioClip;
@@ -65,9 +72,20 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //Scene currentScene = SceneManager.GetActiveScene();
+        //if (currentScene.buildIndex == 0)
+        //{
+        //    Destroy(gameObject);
+        //}
+        ExitLevel();
         numNemici = FindObjectsOfType<NemicoNormale>().Length;
 
         asteroideCD -= Time.deltaTime;
+        if (!isBossTime)
+        {
+            untilBoss -= Time.deltaTime;
+        }
+        
 
         if (!starship.activeSelf && !gameOverCanvas.activeSelf)
         {
@@ -85,7 +103,13 @@ public class GameManager : MonoBehaviour
         {
             scudo.SetActive(false);
         }
-        
+
+        if (untilBoss <= 0 && !isBossTime)
+        {
+            spwanSpec.callBoss = true;
+            isBossTime = true;
+            untilBoss = 300f;
+        }
     }
 
     public void AggiungiPunti(int nuoviPunti)
@@ -170,7 +194,7 @@ public class GameManager : MonoBehaviour
 
     public bool PossoMandareUnNuovoNemico()
     {
-        if (numNemici < 3)
+        if (numNemici < 3 && !isBossTime)
         {
             return true;
         }
@@ -180,9 +204,14 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void PlayerExplosion()
+    {
+        audioS.PlayOneShot(playerExplo);
+    }
+
     public bool PossoMandareAsteroide()
     {
-        if (asteroidi < maxAsteroidi && asteroideCD <= 0)
+        if (asteroidi < maxAsteroidi && asteroideCD <= 0 && !isBossTime)
         {
             return true;
         }
@@ -214,5 +243,17 @@ public class GameManager : MonoBehaviour
     {
         audioS.clip = shieldhit;
         audioS.Play();
+    }
+
+    public void ExitLevel()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape) && !gameExitCanvas.activeSelf)
+        {
+            gameExitCanvas.SetActive(true);
+        }
+        else if (Input.GetKeyDown(KeyCode.Escape) && gameExitCanvas.activeSelf)
+        {
+            gameExitCanvas.SetActive(false);
+        }
     }
 }

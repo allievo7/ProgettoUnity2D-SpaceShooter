@@ -45,22 +45,29 @@ public class Bombardiere : Nemico
 
     public override void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.collider.name.Equals("Proiettile(Clone)"))
+        if (!this.isDead)
         {
-            enemyLife--;
-            gameManager.PlayExplosion();
-        }
+            if (collision.collider.name.Equals("Proiettile(Clone)"))
+            {
+                enemyLife--;
+                gameManager.PlayExplosion();
+            }
 
-        if (collision.collider.name.Equals("Starship"))
-        {
-            enemyLife--;
-        }
+            if (collision.collider.name.Equals("Starship"))
+            {
+                enemyLife--;
+            }
 
-        if (collision.collider.name.Equals("Scudo"))
-        {
-            gameManager.DiminuisciEnergia(1);
-            enemyLife--;
-            this.againstShield = true;
+            if (collision.collider.name.Equals("Scudo"))
+            {
+                gameManager.DiminuisciEnergia(1);
+                enemyLife--;
+                this.againstShield = true;
+            }
+            if (enemyLife <= 0)
+            {
+                this.isDead = true;
+            }
         }
 
         if (enemyLife <= 0)

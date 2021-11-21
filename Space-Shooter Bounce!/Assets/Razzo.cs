@@ -13,27 +13,36 @@ public class Razzo : Nemico
 
     public override void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.collider.name.Equals("Proiettile(Clone)"))
+        if (!this.isDead)
         {
-            gameManager.AggiungiPunti(2);
-        }
+            if (collision.collider.name.Equals("Proiettile(Clone)"))
+            {
+                gameManager.AggiungiPunti(2);
+                gameManager.PlayDeathSound();
+            }
 
-        if (collision.collider.name.Equals("Starship"))
-        {
-            gameManager.AggiungiPunti(2);
-        }
+            if (collision.collider.name.Equals("Starship"))
+            {
+                gameManager.AggiungiPunti(2);
+                gameManager.PlayDeathSound();
+            }
 
-        if (collision.collider.name.Equals("Scudo"))
-        {
-            gameManager.DiminuisciEnergia(1);
-        }
+            if (collision.collider.name.Equals("Scudo"))
+            {
+                gameManager.DiminuisciEnergia(1);
+                gameManager.PlayShieldHit();
+            }
 
-        if (gameManager.ilGiocatoreEVivo())
-        {
-            Physics2D.IgnoreCollision(GameObject.FindGameObjectWithTag("Player").GetComponent<Collider2D>(), this.GetComponent<Collider2D>());
-        }
+            if (gameManager.ilGiocatoreEVivo())
+            {
+                Physics2D.IgnoreCollision(GameObject.FindGameObjectWithTag("Player").GetComponent<Collider2D>(), this.GetComponent<Collider2D>());
+            }
 
-        animator.SetTrigger("Dead");
+            animator.SetTrigger("Dead");
+
+            this.isDead = true;
+        }
+        
         Invoke("AutoDistruzione", 0.5f);
     }
 }

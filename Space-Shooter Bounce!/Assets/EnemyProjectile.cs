@@ -13,7 +13,7 @@ public class EnemyProjectile : MonoBehaviour
         gameManager = FindObjectOfType<GameManager>();
         velocità = 10f;
 
-        Invoke("AutoDistruzione", 1);
+        Invoke("AutoDistruzione", 3);
     }
 
     // Update is called once per frame

@@ -8,6 +8,8 @@ public class NemicoSpeciale : MonoBehaviour
     public float naveLife;
     public float tempoDiVita;
     public GameObject[] buffini;
+    public AudioSource audios;
+    public AudioClip hitByProj;
     // Start is called before the first frame update
     void Start()
     {
@@ -32,6 +34,7 @@ public class NemicoSpeciale : MonoBehaviour
         if (collision.collider.name.Equals("Proiettile(Clone)"))
         {
             naveLife--;
+            audios.PlayOneShot(hitByProj);
             if (naveLife <= 0)
             {
                 Instantiate(buffini[Random.Range(0, 3)], transform.position, Quaternion.identity);

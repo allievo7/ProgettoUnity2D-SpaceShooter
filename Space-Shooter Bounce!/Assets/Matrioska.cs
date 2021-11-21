@@ -11,22 +11,30 @@ public class Matrioska : Nemico
 
     public override void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.collider.name.Equals("Proiettile(Clone)"))
+        if (!this.isDead)
         {
-            enemyLife--;
-            gameManager.PlayExplosion();
-        }
+            if (collision.collider.name.Equals("Proiettile(Clone)"))
+            {
+                enemyLife--;
+                gameManager.PlayExplosion();
+            }
 
-        if (collision.collider.name.Equals("Scudo"))
-        {
-            this.againstShield = true;
-            gameManager.DiminuisciEnergia(matrioskaDanno);
-            enemyLife = 0;
-        }
+            if (collision.collider.name.Equals("Scudo"))
+            {
+                this.againstShield = true;
+                gameManager.DiminuisciEnergia(matrioskaDanno);
+                enemyLife = 0;
+            }
 
-        if (collision.collider.name.Equals("Starship"))
-        {
-            enemyLife--;
+            if (collision.collider.name.Equals("Starship"))
+            {
+                enemyLife--;
+            }
+
+            if (enemyLife <= 0)
+            {
+                this.isDead = true;
+            }
         }
 
         if (enemyLife <= 0)
@@ -48,6 +56,7 @@ public class Matrioska : Nemico
             gameManager.AggiungiPunti(2);
             Instantiate(matrioska2, transform.position, Quaternion.identity);
         }
+        gameManager.PlayDeathSound();
         gameObject.SetActive(false);
         Destroy(gameObject);
     }

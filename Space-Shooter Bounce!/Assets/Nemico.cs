@@ -11,6 +11,7 @@ public class Nemico : MonoBehaviour
     [SerializeField]public GameManager gameManager;
     [SerializeField] public float enemyLife;
     [SerializeField] public Animator animator;
+    public bool isDead = false;
     // Start is called before the first frame update
     void Start()
     {
@@ -52,7 +53,6 @@ public class Nemico : MonoBehaviour
         rigid.position = Camera.main.ViewportToWorldPoint(posizioneCamera);
 
         Attack();
-
     }
 
     private void FixedUpdate()
@@ -68,31 +68,36 @@ public class Nemico : MonoBehaviour
 
     public virtual void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.collider.name.Equals("Proiettile(Clone)"))
+        if (!isDead)
         {
-            gameManager.AggiungiPunti(2);
-            gameManager.PlayDeathSound();
-        }
+            if (collision.collider.name.Equals("Proiettile(Clone)"))
+            {
+                gameManager.AggiungiPunti(2);
+                gameManager.PlayDeathSound();
+            }
 
-        if (collision.collider.name.Equals("Starship"))
-        {
-            gameManager.AggiungiPunti(2);
-            gameManager.PlayDeathSound();
-        }
+            if (collision.collider.name.Equals("Starship"))
+            {
+                gameManager.AggiungiPunti(2);
+                gameManager.PlayDeathSound();
+            }
 
-        if (collision.collider.name.Equals("Scudo"))
-        {
-            gameManager.DiminuisciEnergia(1);
-            gameManager.PlayShieldHit();
-        }
+            if (collision.collider.name.Equals("Scudo"))
+            {
+                gameManager.DiminuisciEnergia(1);
+                gameManager.PlayShieldHit();
+            }
 
-        if (gameManager.ilGiocatoreEVivo() && !gameManager.gameOverCanvas.activeSelf)
-        {
-            Physics2D.IgnoreCollision(GameObject.FindGameObjectWithTag("Player").GetComponent<Collider2D>(), this.GetComponent<Collider2D>());
+            if (gameManager.ilGiocatoreEVivo() && !gameManager.gameOverCanvas.activeSelf)
+            {
+                Physics2D.IgnoreCollision(GameObject.FindGameObjectWithTag("Player").GetComponent<Collider2D>(), this.GetComponent<Collider2D>());
+            }
+
+            gameManager.DiminuisciNemici();
+            animator.SetTrigger("Dead");
+            isDead = true;
         }
-        
-        gameManager.DiminuisciNemici();
-        animator.SetTrigger("Dead");
+        rigid.isKinematic = true;
         Invoke("AutoDistruzione", 0.5f);
     }
 
